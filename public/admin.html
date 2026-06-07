@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUANTAIP — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Jost',sans-serif;background:#f8f8f8;color:#0a0a0a;}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0a0a0a;}
+.login-box{background:#fff;padding:48px;width:380px;border-radius:2px;}
+.login-logo{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;text-align:center;margin-bottom:8px;}
+.login-logo span{font-style:italic;color:#b8860b;}
+.login-sub{font-size:11px;letter-spacing:3px;color:#999;text-align:center;text-transform:uppercase;margin-bottom:32px;}
+.login-input{width:100%;padding:12px 16px;border:1px solid #e5e5e5;font-family:'Jost',sans-serif;font-size:13px;outline:none;margin-bottom:12px;}
+.login-input:focus{border-color:#b8860b;}
+.login-btn{width:100%;padding:14px;background:#0a0a0a;color:#fff;border:none;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;}
+.login-btn:hover{background:#b8860b;}
+.login-error{color:#e74c3c;font-size:12px;text-align:center;margin-top:8px;display:none;}
+
+/* DASHBOARD */
+.dashboard{display:none;}
+.topbar{background:#0a0a0a;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;}
+.topbar-brand{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;font-weight:600;}
+.topbar-brand span{font-style:italic;color:#b8860b;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-tag{font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.4);text-transform:uppercase;}
+.logout-btn{background:transparent;border:1px solid rgba(255,255,255,0.2);color:#fff;padding:8px 16px;font-size:10px;letter-spacing:2px;cursor:pointer;font-family:'Jost',sans-serif;}
+.logout-btn:hover{border-color:#b8860b;color:#b8860b;}
+.logout-btn.active-tab{background:#b8860b;border-color:#b8860b;}
+
+.main{padding:32px;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
+.stat-card{background:#fff;padding:24px;border:1px solid #e5e5e5;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:400;color:#0a0a0a;line-height:1;}
+.stat-num span{color:#b8860b;font-size:20px;}
+.stat-label{font-size:9px;letter-spacing:3px;color:#999;text-transform:uppercase;margin-top:6px;}
+
+.section-card{background:#fff;border:1px solid #e5e5e5;margin-bottom:24px;}
+.section-header{padding:20px 24px;border-bottom:1px solid #e5e5e5;display:flex;justify-content:space-between;align-items:center;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;}
+.section-title span{color:#b8860b;font-style:italic;}
+.section-count{font-size:11px;color:#999;letter-spacing:2px;}
+
+.review-card{padding:20px 24px;border-bottom:1px solid #f0f0f0;}
+.review-card:last-child{border-bottom:none;}
+.review-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.review-name{font-weight:600;font-size:14px;}
+.review-company{font-size:11px;color:#999;margin-top:2px;}
+.review-stars{color:#b8860b;font-size:14px;}
+.review-service{font-size:10px;letter-spacing:2px;color:#b8860b;text-transform:uppercase;margin-bottom:8px;}
+.review-text{font-size:13px;color:#666;line-height:1.7;margin-bottom:12px;font-style:italic;}
+.review-date{font-size:10px;color:#ccc;}
+.review-actions{display:flex;gap:8px;margin-top:12px;}
+.btn-approve{padding:7px 16px;background:#27ae60;color:#fff;border:none;font-size:10px;letter-spacing:2px;cursor:pointer;text-transform:uppercase;}
+.btn-reject{padding:7px 16px;background:transparent;color:#e74c3c;border:1px solid #e74c3c;font-size:10px;letter-spacing:2px;cursor:pointer;text-transform:uppercase;}
+.btn-delete{padding:7px 16px;background:transparent;color:#999;border:1px solid #e5e5e5;font-size:10px;letter-spacing:2px;cursor:pointer;text-transform:uppercase;}
+.badge-approved{display:inline-block;padding:3px 10px;background:#e6f4ea;color:#27ae60;font-size:9px;letter-spacing:2px;text-transform:uppercase;}
+.badge-pending{display:inline-block;padding:3px 10px;background:#fff8e1;color:#f39c12;font-size:9px;letter-spacing:2px;text-transform:uppercase;}
+
+.contact-card{padding:20px 24px;border-bottom:1px solid #f0f0f0;}
+.contact-card:last-child{border-bottom:none;}
+.contact-card.unread{border-left:3px solid #b8860b;}
+.contact-name{font-weight:600;font-size:14px;}
+.contact-email{font-size:12px;color:#999;margin-top:2px;}
+.contact-service{font-size:10px;letter-spacing:2px;color:#b8860b;text-transform:uppercase;margin:8px 0;}
+.contact-message{font-size:13px;color:#666;line-height:1.7;margin-bottom:12px;}
+.contact-meta{font-size:10px;color:#ccc;display:flex;gap:16px;}
+
+.empty-state{padding:60px 24px;text-align:center;color:#ccc;font-size:13px;}
+.empty-icon{font-size:48px;margin-bottom:12px;}
+
+@media(max-width:768px){
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .main{padding:16px;}
+  .topbar{padding:12px 16px;flex-wrap:wrap;gap:8px;}
+  .topbar-right{flex-wrap:wrap;gap:6px;}
+  .logout-btn{padding:6px 10px;font-size:9px;}
+}
+@media(max-width:480px){
+  .stats-row{grid-template-columns:1fr;}
+  .login-box{width:95%;padding:32px 24px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">QUANT<span>AIP</span></div>
+    <div class="login-sub">Admin Panel</div>
+    <input type="password" class="login-input" id="passwordInput" placeholder="Enter admin password" onkeypress="if(event.key==='Enter')login()">
+    <button class="login-btn" onclick="login()">Login</button>
+    <div class="login-error" id="loginError">Incorrect password!</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+  <div class="topbar">
+    <div class="topbar-brand">QUANT<span>AIP</span></div>
+    <div class="topbar-right">
+      <span class="topbar-tag">Admin Panel</span>
+      <button class="logout-btn active-tab" id="tabReviews" onclick="showTab('reviews')">Reviews</button>
+      <button class="logout-btn" id="tabContacts" onclick="showTab('contacts')">Messages</button>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="statTotalReviews">0</div>
+        <div class="stat-label">Total Reviews</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statPendingReviews">0<span style="color:#f39c12">⏳</span></div>
+        <div class="stat-label">Pending Reviews</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statTotalMessages">0</div>
+        <div class="stat-label">Total Messages</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statUnreadMessages">0<span style="color:#b8860b">!</span></div>
+        <div class="stat-label">Unread Messages</div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div id="reviewsSection">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">Customer <span>Reviews</span></div>
+          <span class="section-count" id="reviewsCount">0 reviews</span>
+        </div>
+        <div id="reviewsList"></div>
+      </div>
+    </div>
+
+    <!-- Messages Section -->
+    <div id="contactsSection" style="display:none;">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">Contact <span>Messages</span></div>
+          <span class="section-count" id="contactsCount">0 messages</span>
+        </div>
+        <div id="contactsList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ADMIN_PASSWORD = 'quantaip2026';
+const API_URL = 'https://quantaip-backend.onrender.com';
+
+function login() {
+  const pwd = document.getElementById('passwordInput').value;
+  if (pwd === ADMIN_PASSWORD) {
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadAll();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+function logout() {
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('passwordInput').value = '';
+}
+
+function showTab(tab) {
+  document.getElementById('reviewsSection').style.display = tab === 'reviews' ? 'block' : 'none';
+  document.getElementById('contactsSection').style.display = tab === 'contacts' ? 'block' : 'none';
+  document.getElementById('tabReviews').classList.toggle('active-tab', tab === 'reviews');
+  document.getElementById('tabContacts').classList.toggle('active-tab', tab === 'contacts');
+}
+
+async function loadAll() {
+  await loadReviews();
+  await loadContacts();
+}
+
+async function loadReviews() {
+  try {
+    const res = await fetch(API_URL + '/api/reviews/all');
+    const reviews = await res.json();
+    
+    const pending = reviews.filter(r => !r.approved).length;
+    document.getElementById('statTotalReviews').textContent = reviews.length;
+    document.getElementById('statPendingReviews').innerHTML = pending + '<span style="color:#f39c12">⏳</span>';
+    document.getElementById('reviewsCount').textContent = reviews.length + ' reviews';
+
+    const list = document.getElementById('reviewsList');
+    if (!reviews.length) {
+      list.innerHTML = '<div class="empty-state"><div class="empty-icon">⭐</div>No reviews yet</div>';
+      return;
+    }
+
+    list.innerHTML = reviews.map(r => `
+      <div class="review-card">
+        <div class="review-header">
+          <div>
+            <div class="review-name">${r.name} ${r.company ? `<span style="font-weight:300;color:#999;">— ${r.company}</span>` : ''}</div>
+            <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+          </div>
+          <div>${r.approved ? '<span class="badge-approved">Approved</span>' : '<span class="badge-pending">Pending</span>'}</div>
+        </div>
+        ${r.service ? `<div class="review-service">${r.service}</div>` : ''}
+        <div class="review-text">"${r.review}"</div>
+        <div class="review-date">${new Date(r.createdAt).toLocaleDateString('en-PK')}</div>
+        <div class="review-actions">
+          ${!r.approved ? `<button class="btn-approve" onclick="approveReview('${r._id}')">✓ Approve</button>` : ''}
+          <button class="btn-delete" onclick="deleteReview('${r._id}')">✕ Delete</button>
+        </div>
+      </div>
+    `).join('');
+  } catch(err) {
+    console.log('Reviews error:', err);
+  }
+}
+
+async function approveReview(id) {
+  try {
+    await fetch(API_URL + '/api/reviews/' + id + '/approve', { method: 'PUT' });
+    loadReviews();
+  } catch(err) { console.log(err); }
+}
+
+async function deleteReview(id) {
+  if (!confirm('Delete this review?')) return;
+  try {
+    await fetch(API_URL + '/api/reviews/' + id, { method: 'DELETE' });
+    loadReviews();
+  } catch(err) { console.log(err); }
+}
+
+async function loadContacts() {
+  try {
+    const res = await fetch(API_URL + '/api/contacts');
+    const contacts = await res.json();
+    
+    const unread = contacts.filter(c => !c.read).length;
+    document.getElementById('statTotalMessages').textContent = contacts.length;
+    document.getElementById('statUnreadMessages').innerHTML = unread + '<span style="color:#b8860b">!</span>';
+    document.getElementById('contactsCount').textContent = contacts.length + ' messages';
+
+    const list = document.getElementById('contactsList');
+    if (!contacts.length) {
+      list.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div>No messages yet</div>';
+      return;
+    }
+
+    list.innerHTML = contacts.map(c => `
+      <div class="contact-card ${!c.read ? 'unread' : ''}" id="contact-${c._id}">
+        <div class="review-header">
+          <div>
+            <div class="contact-name">${c.name}</div>
+            <div class="contact-email">${c.email} ${c.phone ? `· ${c.phone}` : ''}</div>
+          </div>
+          <div style="font-size:10px;color:#ccc;">${new Date(c.createdAt).toLocaleDateString('en-PK')}</div>
+        </div>
+        ${c.service ? `<div class="contact-service">${c.service}</div>` : ''}
+        <div class="contact-message">${c.message}</div>
+        <div class="review-actions">
+          ${!c.read ? `<button class="btn-approve" onclick="markRead('${c._id}')">✓ Mark Read</button>` : ''}
+          <button class="btn-delete" onclick="deleteContact('${c._id}')">✕ Delete</button>
+          ${c.phone ? `<a href="https://wa.me/${c.phone.replace(/\D/g,'')}" target="_blank" style="padding:7px 16px;background:#25D366;color:#fff;text-decoration:none;font-size:10px;letter-spacing:2px;">WhatsApp</a>` : ''}
+        </div>
+      </div>
+    `).join('');
+  } catch(err) {
+    console.log('Contacts error:', err);
+  }
+}
+
+async function markRead(id) {
+  try {
+    await fetch(API_URL + '/api/contacts/' + id + '/read', { method: 'PUT' });
+    loadContacts();
+  } catch(err) { console.log(err); }
+}
+
+async function deleteContact(id) {
+  if (!confirm('Delete this message?')) return;
+  try {
+    await fetch(API_URL + '/api/contacts/' + id, { method: 'DELETE' });
+    loadContacts();
+  } catch(err) { console.log(err); }
+}
+</script>
+
+</body>
+</html>
